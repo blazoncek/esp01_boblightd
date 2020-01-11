@@ -426,9 +426,14 @@ void pollBob() {
           // Client sent gibberish
           bobClient.stop();
           bobClient = bob.available();
+          ws2812_clear();
         }
       }
     }
+  }
+  else
+  {
+    ws2812_clear();
   }
 }
 
