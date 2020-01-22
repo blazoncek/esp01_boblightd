@@ -65,10 +65,6 @@ void setup() {
 
   #if DEBUG
   Serial.begin(115200);
-  #else
-  // Initialize the BUILTIN_LED pin as an output & set initial state LED on
-  pinMode(BUILTIN_LED, OUTPUT);
-  digitalWrite(BUILTIN_LED, LOW);
   #endif
 
   String WiFiMAC = WiFi.macAddress();
@@ -130,11 +126,6 @@ void setup() {
     #endif
   }
 //----------------------------------------------------------
-
-  #if !DEBUG
-  // if connected set state LED off
-  digitalWrite(BUILTIN_LED, HIGH);
-  #endif
 
   // OTA update setup
   //ArduinoOTA.setPort(8266);
@@ -303,7 +294,7 @@ void pollBob() {
     //find free/disconnected spot
     if (!bobClient || !bobClient.connected())
     {
-      if(bobClient) bobClient.stop();
+      if (bobClient) bobClient.stop();
       bobClient = bob.available();
     }
     //no free/disconnected spot so reject

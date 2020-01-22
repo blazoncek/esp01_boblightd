@@ -1,4 +1,4 @@
-#define DEBUG   0
+#define DEBUG   1
 
 #define DEFAULT_NAME           "bob"    // Default Device Name
 #define WIFI_HOSTNAME          "%s-%04d"    // Expands to <NAME>-<last 4 decimal chars of MAC address>

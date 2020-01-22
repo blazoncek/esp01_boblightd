@@ -16,7 +16,9 @@ File fsUploadFile;
 
 
 void handleRoot() {
-  String sections, postForm = 
+  char buffer[128];
+  int b=0,r=0,t=0,l=0;
+  String postForm = 
 "<html>\n"
 "<head>\n"
   "<title>Configure LED strips</title>\n"
@@ -25,12 +27,26 @@ void handleRoot() {
 "<body>\n"
 "<form method=\"post\" enctype=\"application/x-www-form-urlencoded\" action=\"/set/\">\n"
 "<table>\n";
-    
-  postForm += "<tr><td>Bottom LEDs:</td><td><input type=\"text\" name=\"bottom\" value=\"25\"></td></tr>";
-  postForm += "<tr><td>Left LEDs:</td><td><input type=\"text\" name=\"left\" value=\"15\"></td></tr>";
-  postForm += "<tr><td>Top LEDs:</td><td><input type=\"text\" name=\"top\" value=\"25\"></td></tr>";
-  postForm += "<tr><td>Right LEDs:</td><td><input type=\"text\" name=\"right\" value=\"15\"></td></tr>";
-  
+
+  for ( int i=0; i<numLights; i++ )
+  {
+    switch ( lights[i].lightname[0] )
+    {
+      case 'b' : b++; break;
+      case 'l' : l++; break;
+      case 't' : t++; break;
+      case 'r' : r++; break;
+    }
+  }
+  snprintf_P(buffer, 127, PSTR("<tr><td>Bottom LEDs:</td><td><input type=\"text\" name=\"bottom\" value=\"%d\"></td></tr>"), b);
+  postForm += buffer;
+  snprintf_P(buffer, 127, PSTR("<tr><td>Left LEDs:</td><td><input type=\"text\" name=\"left\" value=\"%d\"></td></tr>"), l);
+  postForm += buffer;
+  snprintf_P(buffer, 127, PSTR("<tr><td>Top LEDs:</td><td><input type=\"text\" name=\"top\" value=\"%d\"></td></tr>"), t);
+  postForm += buffer;
+  snprintf_P(buffer, 127, PSTR("<tr><td>Right LEDs:</td><td><input type=\"text\" name=\"right\" value=\"%d\"></td></tr>"), r);
+  postForm += buffer;
+
   postForm += "<tr><td>Depth of scan (%):</td><td><input type=\"text\" name=\"pct\" value=\"10\"></td></tr>";
 
   postForm += "<tr><td colspan=\"2\" align=\"center\"><input type=\"submit\" value=\"Submit\"></td></tr>\n</table>\n</form>\n</body>\n</html>";
@@ -66,13 +82,15 @@ void handleSet() {
     int zones;
     char tnum[4];
   
-    String message = "<html>\n\
-  <head>\n\
-    <meta http-equiv='refresh' content='15; url=/' />\n\
-    <title>ESP8266 settings applied</title>\n\
-  </head>\n\
-  <body>\n\
-    Settings applied.<br>\n";
+    String message = F(
+"<html>\n"
+"<head>\n"
+  "<meta http-equiv='refresh' content='15; url=/' />\n"
+  "<title>ESP8266 settings applied</title>\n"
+"</head>\n"
+"<body>\n"
+  "Settings applied.<br>\n"
+      );
 
     for ( uint8_t i = 0; i < server.args(); i++ ) {
       String argN = server.argName(i);
